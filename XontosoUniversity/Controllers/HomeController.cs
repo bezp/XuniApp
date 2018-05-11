@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using XontosoUniversity.DAL;
+using XontosoUniversity.ViewModels;
 
 namespace XontosoUniversity.Controllers
 {
     public class HomeController : Controller
     {
+        private SchoolContext db = new SchoolContext();
+
         public ActionResult Index()
         {
             return View();
@@ -15,16 +19,33 @@ namespace XontosoUniversity.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            IQueryable<EnrollmentDateGroup> data = from xstudent in db.Students
+                                                   group xstudent by xstudent.EnrollmentDate into dateGroup
+                                                   select new EnrollmentDateGroup()
+                                                   {
+                                                       EnrollmentDate = dateGroup.Key,
+                                                       StudentCount = dateGroup.Count()
+                                                   };
+            return View(data.ToList());
         }
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
+
+        //    return View();
+        //}
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
