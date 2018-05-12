@@ -23,6 +23,7 @@
     @foreach (var item in Model.Instructors)
     {
         string selectedRow = "";
+        string noLocation = "nu loc";
         if (item.ID == ViewBag.InstructorID)
         {
             selectedRow = "success";
@@ -44,7 +45,8 @@
                 }
                 else
                 {
-                    @ViewBag.xx
+                    @ViewBag.xx <br />
+                    @noLocation
                 }
             </td>
             <td>
